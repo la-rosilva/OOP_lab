@@ -1,162 +1,135 @@
 import java.util.Scanner;
-class stud{
-	String sname;
-	int [] marks_array;
-	int total;
-	double avg;
-	
-	stud(){
-		System.out.println("Inside the default constructor:");
-		sname="";
-		marks_array=new int[0];
-		total=0;
-		avg=0.0;
-	}
-	stud(String sname, int marks_array[]){
-		System.out.println("Inside the parameterised constructor:");
-		this.sname=sname;
-		this.marks_array=marks_array;
 
-	}
-	void compute(){
-		total=0;
-		int count=0;
-		for(int m:marks_array){
-			total+=m;
-			count++;
-		}
-		avg=(double)total/count;
-	}
+// Base class
+class emp {
+    String Ename;
+    int Eid;
+    double Basic;
+    double DA;
+    double Gross_Sal;
+    double Net_Sal;
 
-	void display(){
-	System.out.println("Name: "+sname);
-	System.out.println("Marks: ");
-	for(int k:marks_array){
-		System.out.println(k);
-	}
-	System.out.println("Total: "+total);
-	System.out.println("Average: "+avg);
+    // Default constructor
+    emp() {
+        System.out.println("Inside the default constructor");
+        Ename = "";
+        Eid = 0;
+        Basic = 0.0;
+    }
 
+    // Parameterized constructor
+    emp(String Ename, int Eid, double Basic) {
+        System.out.println("Inside the parameterized constructor");
+        this.Ename = Ename;
+        this.Eid = Eid;
+        this.Basic = Basic;
+    }
 
-	}
+    // Method to compute net salary
+    void compute_net_sal() {
+        DA = 0.52 * Basic;
+        Gross_Sal = Basic + DA;
+        double IT = 0.3 * Gross_Sal;
+        Net_Sal = Gross_Sal - IT;
+    }
+
+    // Method to display details
+    void Display() {
+        System.out.println("Name: " + Ename);
+        System.out.println("ID: " + Eid);
+        System.out.println("Basic Salary: " + Basic);
+        System.out.println("DA: " + DA);
+        System.out.println("Gross Salary: " + Gross_Sal);
+        System.out.println("Net Salary: " + Net_Sal);
+    }
 }
 
-	class ScienceStudent extends stud{
-		private int Practical_marks;
-		ScienceStudent(String name, int marks_array[],int Practical_marks){
-		super(name,marks_array);
-		this.Practical_marks=Practical_marks;}
+// Full-time employee class (subclass)
+class FullTimeEmp extends emp {
+    double bonus;
+    double deduction;
+    double NetSalary;
 
+    FullTimeEmp(String Ename, int Eid, double Basic) {
+        super(Ename, Eid, Basic);
+        this.bonus = 1000;  // Example value
+        this.deduction = 500;  // Example value
+    }
 
-		void compute(){
-			int total_marks=Practical_marks+super.total;
-			double average=total_marks/4;
+    // Overriding the method to compute net salary
+    @Override
+    void compute_net_sal() {
+        super.compute_net_sal();  // Call base class computation
+        NetSalary = super.Net_Sal + bonus - deduction;
+    }
 
-		}
-		void DisplayPracticalMarks(int Pract){
-			System.out.println("The Practical marks is:"+Practical_marks);
-		}
-
-
-	}
-	class ArtsStudent extends stud{
-		private String electiveSubject;
-		ArtsStudent(String name, int marks_array[], String electiveSubject){
-		super(name, marks_array);
-		this.electiveSubject=electiveSubject;}
-
-	
-	void DisplayElective(String elective){
-		System.out.println("The elective Subject is: "+electiveSubject);
-	}
-
-
+    // Overriding the display method
+    @Override
+    void Display() {
+        super.Display();  // Call base class display
+        System.out.println("Bonus: " + bonus);
+        System.out.println("Deduction: " + deduction);
+        System.out.println("Final Net Salary: " + NetSalary);
+    }
 }
 
-class StudentInherit{
-	public static void main(String args[]){
-		int N,i,j;
-		Scanner sc=new Scanner(System.in);
-		stud student=new stud();
-		student.display();
-		
+// Part-time employee class (subclass)
+class PartTimeEmp extends emp {
+    int hoursWorked;
+    double NetSal;
+    final static double hourlyRate = 80;
 
-			//Student
-			System.out.println("Enter the name: ");
-			String name=sc.nextLine();
-			System.out.println("Enter the number of subjects: ");
-	        int sub=sc.nextInt();
-            int [] marks=new int[sub];
-			for(j=0; j<sub;j++){
-				System.out.println("Enter the marks for subject"+(j+1));
-				marks[j]=sc.nextInt();
-			}
-			stud student1=new stud(name,marks);
-			student1.compute();
-			student1.display();
-			System.out.println();
+    PartTimeEmp(String Ename, int Eid, int hoursWorked) {
+        super(Ename, Eid, 0);  // Part-time employees may not have basic salary
+        this.hoursWorked = hoursWorked;
+    }
 
-           //Science Student
-			System.out.println("Enter the name: ");
-			String name_sci=sc.nextLine();
-			System.out.println("Enter the number of subjects: ");
-	        int sub_sci=sc.nextInt();
-            int [] marks_sci=new int[sub_sci];
-			for(j=0; j<sub_sci;j++){
-				System.out.println("Enter the marks for subject"+(j+1));
-				marks_sci[j]=sc.nextInt();
-			}
-			System.out.println("Enter the practical Exam marks");
-			int practical=sc.nextInt();
-			ScienceStudent student2=new ScienceStudent(name_sci,marks_sci,practical);
-			stud ref=student2;
-			
-			ref.compute();
-			ref.display();
-		
-			ref.DisplayPracticalMarks(practical);
-		
+    // Overriding the method to compute net salary
+    @Override
+    void compute_net_sal() {
+        NetSal = hoursWorked * hourlyRate;
+    }
 
-
-
-		   //Arts student
-			System.out.println("Enter the name: ");
-			String name_arts=sc.nextLine();
-			System.out.println("Enter the number of subjects: ");
-	        int sub_arts=sc.nextInt();
-            int [] marks_arts=new int[sub_arts];
-			for(j=0; j<sub_arts;j++){
-				System.out.println("Enter the marks for subject"+(j+1));
-				marks_arts[j]=sc.nextInt();
-			}
-			System.out.println("Enter the Elective subject");
-			String elective=sc.nextLine();
-			 ArtsStudent student3=new ArtsStudent(name_arts,marks_arts,elective);
-
-			ref=student3;
-			ref.compute();
-			ref.display();
-			
-			ref.DisplayElective(elective);
-	      
-
-
-		
-		
-
-
-			// students[i]=new STUDENT(name,marks);
-			// students[i].compute();
-
-
-
-
-			}
-			// for(STUDENT stud:students){
-			// 	stud.display();
-			// 	System.out.println();
-
-			// }
-
+    // Overriding the display method
+    @Override
+    void Display() {
+        System.out.println("Name: " + Ename);
+        System.out.println("ID: " + Eid);
+        System.out.println("Hours worked: " + hoursWorked);
+        System.out.println("Hourly Rate: " + hourlyRate);
+        System.out.println("Net Salary: " + NetSal);
+    }
 }
-		
+
+// Main class to test employee inheritance and dynamic polymorphism
+class StudentInherit {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Full time employee
+        System.out.println("Enter the name for full-time employee:");
+        String EnameFull = sc.nextLine();
+        System.out.println("Enter the Employee ID: ");
+        int EidFull = sc.nextInt();
+        System.out.println("Enter the Basic salary: ");
+        double BasicFull = sc.nextDouble();
+
+        emp emp1 = new FullTimeEmp(EnameFull, EidFull, BasicFull);  // Polymorphism
+        emp1.compute_net_sal();
+        emp1.Display();
+
+        sc.nextLine();  // Consume leftover newline
+
+        // Part time employee
+        System.out.println("\nEnter the name for part-time employee:");
+        String EnamePart = sc.nextLine();
+        System.out.println("Enter the Employee ID: ");
+        int EidPart = sc.nextInt();
+        System.out.println("Enter the number of hours worked: ");
+        int hoursWorked = sc.nextInt();
+
+        emp emp2 = new PartTimeEmp(EnamePart, EidPart, hoursWorked);  // Polymorphism
+        emp2.compute_net_sal();
+        emp2.Display();
+    }
+}
